@@ -1,0 +1,23 @@
+{
+  "name": "kin-auth-queue",
+  "version": "1.0.0",
+  "description": "Authentication and queueing for Kin node-SDK",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hitwill/kin-auth-queue.git"
+  },
+  "keywords": [
+    "kin",
+    "node.js"
+  ],
+  "author": "Will Gikandi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hitwill/kin-auth-queue/issues"
+  },
+  "homepage": "https://github.com/hitwill/kin-auth-queue#readme"
+}
