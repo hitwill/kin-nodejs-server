@@ -30,7 +30,7 @@ server.on('request', async (req, res) => {
                 body = '';
             }
         }
-        if (authorizeUser(post)) {
+        if (authorizeUser(body)) {
             await processRequest(getReq, body, res);//pass it on to the singleton Kin object
         } else {
             responses.respond(res, errorResponse('Unauthorized User'));
