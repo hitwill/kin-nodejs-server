@@ -22,6 +22,6 @@
   "homepage": "https://github.com/hitwill/kin-auth-queue#readme",
   "dependencies": {
     "bull": "^3.10.0",
-    "kin-node-callback": "^1.0.4"
+    "kin-node-callback": "^2.0.1"
   }
 }

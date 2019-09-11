@@ -13,6 +13,7 @@ const server = http.createServer();
 server.on('request', async (req, res) => {
     var body = '';
     const getReq = qs.parse(req.url.split('?')[1]);
+    
     req.on('data', function (data) { body += data; });
     req.on('end', async function () {
         try {
@@ -29,7 +30,11 @@ server.on('request', async (req, res) => {
                 body = '';
             }
         }
-        await processRequest(getReq, body, res);//pass it on to the singleton Kin object
+        if (authorizeUser(post)) {
+            await processRequest(getReq, body, res);//pass it on to the singleton Kin object
+        } else {
+            responses.respond(res, errorResponse('Unauthorized User'));
+        }
     });
     req.on('error', (err) => {
         responses.respond(res, errorResponse(err));
@@ -38,7 +43,11 @@ server.on('request', async (req, res) => {
 });
 server.listen(port);
 
-
+function authorizeUser(post) {
+    //you can use any data from the client to authenticate the uesr. e.g. max earns per day per user
+    //post.id will have a unique user id sent by the client
+    return (true);
+}
 
 async function processRequest(get, post, res) {
     let response;

@@ -1,8 +1,9 @@
 //MODIFY THIS FOR YOUR ENVIRONMENT
-isProduction = false;
-seed = process.env.PRIVATE_KEY; //private key/seed (keep private / store in .env file for production)
-uniqueAppId = process.env.appID; //your app id assigned by Kin - you can use 1acd for testing
-maxKinSendable = 200; //just for your security - set max Kin you allow from your server to your app
+const isProduction = false;
+const seed = process.env.PRIVATE_KEY; //private key/seed - store safely
+const salt = process.env.SALT; //salt to create your channels
+const uniqueAppId = process.env.appID; //your app id assigned by Kin - you can use 1acd for testing
+const maxKinSendable = 200; //just for your security - set max Kin you allow from your server to your app
 //END MODIFY THIS FOR YOUR ENVIRONMENT
 
 
@@ -11,7 +12,7 @@ const QueueOptions = require('./queueOptions.js');
 const responses = require('./responses.js');
 const transactions = new Queue('transactionQueue', process.env.REDISCLOUD_URL, QueueOptions.options);
 const KinWrapper = require('kin-node-callback');
-const kin = new KinWrapper(seed, isProduction, uniqueAppId);//initialize
+const kin = new KinWrapper(seed, salt, isProduction, uniqueAppId);//initialize
 
 
 
@@ -33,7 +34,7 @@ async function fundAccount(address, memo, amount) {
 
 
 //send a payment
-async function sendPayment(address, id, memo, amount) {
+async function sendPayment(address, memo, amount) {
     //you can use the id to record / authorise details of each user (not implemented here)
     var response = responses.standardResponse();
     amount = Math.min(amount, maxKinSendable); //set max we are willing to send - consider adding other security features
@@ -50,8 +51,23 @@ async function sendPayment(address, id, memo, amount) {
 }
 
 
+//create channels
+async function createChannels(address, id, memo, amount) {
+    //This only needs to be run ONCE - i.e. the first time you set up. (Or if you change your seed or salt)
+    var response = responses.standardResponse();
+    await kin.CreateChannels((err, result) => {
+        if (!err) {
+            response.text = result;
+        } else {
+            response = responses.errorResponse(err);
+        }
+    });
+    return (response);
+}
+
+
 //Whitelists transactions so fees are zero
-function whitelistTransaction(data) {
+async function whitelistTransaction(data) {
     var response = responses.standardResponse();
     clientTransaction = JSON.stringify(data);
     try {
@@ -70,17 +86,18 @@ async function processJob(job) {
     let response;
     if (typeof get.fund !== 'undefined') {
         //fund a newly created account
-        if (post.amount < maxKinSendable)
-            response = await fundAccount("GBHIF62HGZC2UBGXZZFGXZ4Q2E42FFOWJGLXX7HLFBGAKPXEQ7MQJ2RR", "test", 10);
-            ///todo: restore response = await fundAccount(post.address, post.memo, post.amount);
+        if (post.amount <= maxKinSendable)
+            response = await fundAccount(post.address, post.memo, post.amount);
     } else if (typeof get.request !== 'undefined') {
         //send a payment to an account
-        if (post.amount < maxKinSendable || true === true) //todo: remove true
-            response = await sendPayment("GBHIF62HGZC2UBGXZZFGXZ4Q2E42FFOWJGLXX7HLFBGAKPXEQ7MQJ2RR", "99", "test", 5);
-            ///todo: restore response = await sendPayment(post.address, post.id, post.memo, post.amount);
+        if (post.amount <= maxKinSendable)
+            response = await sendPayment(post.address, post.memo, post.amount);
     } else if (typeof get.whitelist !== 'undefined') {
         //Whitelist a transaction
         response = await whitelistTransaction(post);
+    } else if (typeof get.createChannels !== 'undefined') {
+        //create channels for the first time
+        response = await createChannels();
     } else {
         //empty request
         response = responses.errorResponse('no get vars');
