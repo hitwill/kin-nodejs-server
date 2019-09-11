@@ -1,4 +1,4 @@
-# Kin-node.js server in 10 minutes
+# Kin-node.js server and app in 10 minutes
 ### Heroku ready Implementation of the [Kin SDK for Node.js](https://github.com/kinecosystem/kin-sdk-node)
 
 If you follow the steps below, you should have a running Kin app (client and server) in 15 minutes. (A more detailed tutorial can be found [here](https://medium.com/kinblog/building-a-kin-powered-app-with-unity-cf8deef56bdb) but this code has the latest updates)
