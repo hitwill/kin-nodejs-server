@@ -24,7 +24,7 @@ Find your app's url from the *settings* tab and access it with the following var
 e.g.
 https://my-server.herokuapp.com?createChannels=true
 
-This is a one time function you run, to create [channels](https://docs.kin.org/nodejs/sdk#channels) for your account. You can re-run this function if you change your private key and/ or salt. If everything went well, your server should have given you the 'OK' sign. 
+This is a one time function you run, to create [channels](https://docs.kin.org/nodejs/sdk#channels) for your account. You can re-run this function if you change your private key and/ or salt (or if you change from Test to Production environments). If everything went well, your server should have given you the 'OK' sign. 
 
 ### Usage
 Simply call the server with GET/POST to perform the following functions:
