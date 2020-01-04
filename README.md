@@ -3,7 +3,7 @@
 
 If you follow the steps below, you should have a running Kin app (client and server) in 10-15 minutes. (A more detailed tutorial can be found [here](https://medium.com/kinblog/building-a-kin-powered-app-with-unity-cf8deef56bdb) but this code has the latest updates)
 ## I. Server set up
-1. Create a new app on [Heroku](https://dashboard.heroku.com/apps) and provision (add) [redis cloud](https://elements.heroku.com/addons/rediscloud).
+1. Create a new app on [Heroku](https://dashboard.heroku.com/apps) and provision (add) [redis cloud](https://elements.heroku.com/addons/rediscloud). (To use redis, you will need a credit card to authenticate your identity, but the service is free)
 2. Under *settings* add the following config vars:
 
     a). appID - random alphanumeric 4 character string
